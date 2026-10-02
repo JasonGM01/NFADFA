@@ -44,12 +44,12 @@ import java.util.Scanner;
 
 public class NFADFA {
     public static void main(String[] args) {
-        String NFA;
-        ArrayList<String> NFAList = new ArrayList<>();
+        String[] NFA = new String[2];
+        ArrayList<String[]> NFAList = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
-        System.out.printf("Input NFA to convert\n Form: '{q0, a} = {q1,q2}'");
-        NFA = sc.next();
-        System.out.printf("%s", NFA);
+        System.out.printf("Input NFA to convert\nForm: '{q0,a} = {q1,q2}'\n");
+        NFA = sc.next().split("=");
+        System.out.printf("%s\n", NFA[0]);
         NFAList.add(NFA);
 
         System.out.printf("%s", NFAList);
