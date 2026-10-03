@@ -14,8 +14,8 @@ matrix cells are subsets of states representing transitions for
 corresponding states and symbols.
 Returns matrix representing dfa. each cell must be a single state
 
-TODO:
-1. Create main file
+TO DO:
+1. Create main file for testing purposes
 2. create data structures that will store dfa and nfa
 3. create NFA file for NFA call
 4. create DFA file for DFA call/conversion
@@ -25,35 +25,71 @@ TODO:
 sample inputs:
 1. 
 input nfa: 
-{q0, a} = {q0, q1}
-{q1, b} = {q1, q2}
-{q2, a} = {q2}
+(q0, a) = {q0, q1}
+(q1, b) = {q1, q2}
+(q2, a) = {q2}
 with initial q0 and final q1
 
 2.
 input nfa:
-{q0, a} = {q0, q1}
-{q1, b} = {q1, q2}
-{q2, a} = {q2}
-{q0, <lambda>} = {q2}
+(q0, a) = {q0, q1}
+(q1, b) = {q1, q2}
+(q2, a) = {q2}
+(q0, <lambda>) = {q2}
 with initial q0 and final q1
 */
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class NFADFA {
-    public static void main(String[] args) {
-        String[] NFA = new String[2];
-        ArrayList<String[]> NFAList = new ArrayList<>();
-        Scanner sc = new Scanner(System.in);
-        System.out.printf("Input NFA to convert\nForm: '{q0,a} = {q1,q2}'\n");
-        NFA = sc.next().split("=");
-        System.out.printf("%s\n", NFA[0]);
-        NFAList.add(NFA);
+    public static void main(String[] args) throws IOException {
+        String NFAState = "";
+        String NFASymbol = "";
+        String DFAOutputState = "";
+        String[] NFAString;
+        String[] NFATemp;
+        String[] NFATemp2;
+        String[] NFATemp3;
+        int delta;
+        // [state][symbol]
+        String[][] nfa = new String[1][1];
+        String[][] dfa = new String[1][1];
+        List<List<String>> AcceptorList = new ArrayList<>();
+        Scanner keyboard = new Scanner(System.in);
 
-        System.out.printf("%s", NFAList);
+        // accept number deltas
+        System.out.printf("Input number of deltas:\n");
+        delta = keyboard.nextInt();
 
-        sc.close();
+        // accept string input
+        for (int i = 0; i < delta; i++) {
+            System.out.printf("Input NFA to convert\nForm: '{ q0 , a } = { q1 , q2 }'\n");
+
+            // grabs delta
+            NFAString = keyboard.nextLine().split(" , ");
+
+            // splits delta
+            NFATemp = NFAString[0].split(" ");
+            NFAState = NFATemp[1];
+
+            NFATemp2 = NFAString[1].split(" ");
+            NFASymbol = NFATemp2[0];
+
+            NFATemp3 = NFAString[2].split(" ");
+            DFAOutputState = NFATemp2[4] + NFATemp3[0];
+
+            // create delta
+
+            // confirm state and input
+            // System.out.printf("state: %s\nInput: %s\nOutput: %s\n", NFA.getState(),
+            // NFA.getInput(), NFA.getOutput());
+
+            // put into arraylist
+        }
+
+        keyboard.close();
     }
 }
