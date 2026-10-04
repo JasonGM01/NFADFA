@@ -63,6 +63,7 @@ public class NFADFA {
         // accept number deltas
         System.out.printf("Input number of deltas:\n");
         delta = keyboard.nextInt();
+        keyboard.nextLine();
 
         // accept string input
         for (int i = 0; i < delta; i++) {
@@ -82,12 +83,18 @@ public class NFADFA {
             DFAOutputState = NFATemp2[4] + NFATemp3[0];
 
             // create delta
+            List<String> deltaList = new ArrayList<>();
+            deltaList.add(NFAState);
+            deltaList.add(NFASymbol);
+            deltaList.add(DFAOutputState);
 
             // confirm state and input
+            System.out.printf("state: %s\nInput: %s\nOutput: %s\n", NFAState, NFASymbol, DFAOutputState);
             // System.out.printf("state: %s\nInput: %s\nOutput: %s\n", NFA.getState(),
             // NFA.getInput(), NFA.getOutput());
 
             // put into arraylist
+            AcceptorList.add(deltaList);
         }
 
         keyboard.close();
