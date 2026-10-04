@@ -16,9 +16,15 @@ Returns matrix representing dfa. each cell must be a single state
 
 TO DO:
 1. Create main file for testing purposes
+   > done
+
 2. create data structures that will store dfa and nfa
-3. create NFA file for NFA call
-4. create DFA file for DFA call/conversion
+   > nfa side done
+
+3. create NFA
+   > done
+
+4. create DFA
 5. fix logic based on parameters and needs
 6. confirm output formatting
 
@@ -40,56 +46,59 @@ with initial q0 and final q1
 */
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class NFADFA {
-    public static void main(String[] args) throws IOException {
+    public static void NFA() {
+        int delta;
+        char[] NFAString;
+        String NFAInput;
         String NFAState = "";
         String NFASymbol = "";
-        String DFAOutputState = "";
-        String[] NFAString;
-        String[] NFATemp;
-        String[] NFATemp2;
-        String[] NFATemp3;
-        int delta;
-        // [state][symbol]
-        String[][] nfa = new String[1][1];
-        String[][] dfa = new String[1][1];
-        List<List<String>> AcceptorList = new ArrayList<>();
-        Scanner keyboard = new Scanner(System.in);
+        
+        try(Scanner keyboard = new Scanner(System.in);){
 
         // accept number deltas
         System.out.printf("Input number of deltas:\n");
         delta = keyboard.nextInt();
+        keyboard.nextLine();
+
+        //create array using delta as parameter
+        // [state][symbol]
+        String[][] nfa = new String[delta][2];
 
         // accept string input
         for (int i = 0; i < delta; i++) {
-            System.out.printf("Input NFA to convert\nForm: '{ q0 , a } = { q1 , q2 }'\n");
+            System.out.printf("Input NFA to convert\nForm: '(q0, a) = {q0, q1}'\n");
 
             // grabs delta
-            NFAString = keyboard.nextLine().split(" , ");
+            NFAInput = keyboard.nextLine();
 
-            // splits delta
-            NFATemp = NFAString[0].split(" ");
-            NFAState = NFATemp[1];
+            //split delta to state and symbol
+            NFAString = NFAInput.toCharArray();
+            NFAState += NFAString[1];
+            NFAState += NFAString[2];
+            NFASymbol += NFAString[5];
 
-            NFATemp2 = NFAString[1].split(" ");
-            NFASymbol = NFATemp2[0];
+            //store state and symbol
+            nfa[i][0] = NFAState; 
+            nfa[i][1] = NFASymbol;
 
-            NFATemp3 = NFAString[2].split(" ");
-            DFAOutputState = NFATemp2[4] + NFATemp3[0];
+            //reset
+            NFAState = "";
+            NFASymbol = "";
+        }
 
-            // create delta
-
-            // confirm state and input
-            // System.out.printf("state: %s\nInput: %s\nOutput: %s\n", NFA.getState(),
-            // NFA.getInput(), NFA.getOutput());
-
-            // put into arraylist
+        //print nfa states and symbols
+        for(int i = 0; i < delta; i++){
+            System.out.printf("NFA Delta #%d\nState: %s\nSymbol: %s\n\n", i+1, nfa[i][0], nfa[i][1]);
         }
 
         keyboard.close();
+    }
+}
+
+    public static void main(String[] args) throws IOException {
+        NFA();
     }
 }
