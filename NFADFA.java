@@ -19,14 +19,22 @@ TO DO:
    > done
 
 2. create data structures that will store dfa and nfa
-   > nfa side done
+   > done
 
 3. create NFA
    > done
 
 4. create DFA
+   > done
+
 5. fix logic based on parameters and needs
+   > done
+
 6. confirm output formatting
+   > done
+
+**Parser idea was good but will continue to a different path based on new
+understanding**
 
 sample inputs:
 1. 
@@ -36,69 +44,98 @@ input nfa:
 (q2, a) = {q2}
 with initial q0 and final q1
 
+> input essentially:
+(q0, a) --> q0q1
+
 2.
 input nfa:
 (q0, a) = {q0, q1}
 (q1, b) = {q1, q2}
 (q2, a) = {q2}
-(q0, <lambda>) = {q2}
+(q0, lambda) = {q2}
 with initial q0 and final q1
 */
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class NFADFA {
-    public static void NFA() {
+    public static String[][] NFA(Scanner keyboard) {
+        HashMap<String, Integer> symbolMap = new HashMap<>();
         int delta;
-        char[] NFAString;
-        String NFAInput;
-        String NFAState = "";
-        String NFASymbol = "";
-        
-        try(Scanner keyboard = new Scanner(System.in);){
+        String deltaInput;
+        String[] NFADelta;
+        String[] NFAInput;
+        String NFAState;
+        String NFASymbol;
+        String DFAState;
+
+        // populate hashmap for lookup
+        symbolMap.put("a", 0);
+        symbolMap.put("b", 1);
+        symbolMap.put("lambda", 2);
+
+        // Scanner keyboard = new Scanner(System.in);
 
         // accept number deltas
         System.out.printf("Input number of deltas:\n");
         delta = keyboard.nextInt();
         keyboard.nextLine();
 
-        //create array using delta as parameter
+        // create array using delta as parameter
         // [state][symbol]
-        String[][] nfa = new String[delta][2];
+        String[][] nfa = new String[delta][3];
+        String[][] dfa = new String[delta][3];
 
         // accept string input
+        // 17 char total for string with 2 states output
+        // 12 for single state
         for (int i = 0; i < delta; i++) {
             System.out.printf("Input NFA to convert\nForm: '(q0, a) = {q0, q1}'\n");
 
             // grabs delta
-            NFAInput = keyboard.nextLine();
+            deltaInput = keyboard.nextLine();
 
-            //split delta to state and symbol
-            NFAString = NFAInput.toCharArray();
-            NFAState += NFAString[1];
-            NFAState += NFAString[2];
-            NFASymbol += NFAString[5];
+            // split delta to state and symbol
+            // nfa side
+            NFADelta = deltaInput.split("=");
+            NFAInput = NFADelta[0].split(",");
 
-            //store state and symbol
-            nfa[i][0] = NFAState; 
-            nfa[i][1] = NFASymbol;
+            // dfa side
+            if (NFADelta[1].contains(",")) {
+                DFAState = NFADelta[1]
+                        .replace("{", "")
+                        .replace("}", "")
+                        .replace(", ", "")
+                        .trim();
+            } else {
+                DFAState = NFADelta[1]
+                        .replace("{", "")
+                        .replace("}", "")
+                        .trim();
+            }
 
-            //reset
-            NFAState = "";
-            NFASymbol = "";
+            // store state, symbol, destination
+            NFAState = NFAInput[0].replace("(", "").trim();
+            NFASymbol = NFAInput[1].replace(")", "").trim();
+            int row = Integer.parseInt(NFAState.substring(1));
+            int col = symbolMap.get(NFASymbol);
+            nfa[row][col] = NFADelta[1].trim();
+            dfa[row][col] = DFAState;
         }
 
-        //print nfa states and symbols
-        for(int i = 0; i < delta; i++){
-            System.out.printf("NFA Delta #%d\nState: %s\nSymbol: %s\n\n", i+1, nfa[i][0], nfa[i][1]);
+        // trash state for dfa
+        for (int i = 0; i < delta; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (dfa[i][j] == null) {
+                    dfa[i][j] = "trash";
+                }
+            }
         }
 
-        keyboard.close();
-    }
-}
+        // close keyboard
+        // keyboard.close();
 
-    public static void main(String[] args) throws IOException {
-        NFA();
+        return dfa;
     }
 }
