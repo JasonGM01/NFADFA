@@ -16,11 +16,25 @@ Returns matrix representing dfa. each cell must be a single state
 
 TO DO:
 1. Create main file for testing purposes
+   > done
+
 2. create data structures that will store dfa and nfa
-3. create NFA file for NFA call
-4. create DFA file for DFA call/conversion
+   > done
+
+3. create NFA
+   > done
+
+4. create DFA
+   > done
+
 5. fix logic based on parameters and needs
+   > done
+
 6. confirm output formatting
+   > done
+
+**Parser idea was good but will continue to a different path based on new
+understanding**
 
 sample inputs:
 1. 
@@ -30,73 +44,98 @@ input nfa:
 (q2, a) = {q2}
 with initial q0 and final q1
 
+> input essentially:
+(q0, a) --> q0q1
+
 2.
 input nfa:
 (q0, a) = {q0, q1}
 (q1, b) = {q1, q2}
 (q2, a) = {q2}
-(q0, <lambda>) = {q2}
+(q0, lambda) = {q2}
 with initial q0 and final q1
 */
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class NFADFA {
-    public static void main(String[] args) throws IOException {
-        String NFAState = "";
-        String NFASymbol = "";
-        String DFAOutputState = "";
-        String[] NFAString;
-        String[] NFATemp;
-        String[] NFATemp2;
-        String[] NFATemp3;
+    public static String[][] NFA(Scanner keyboard) {
+        HashMap<String, Integer> symbolMap = new HashMap<>();
         int delta;
-        // [state][symbol]
-        String[][] nfa = new String[1][1];
-        String[][] dfa = new String[1][1];
-        List<List<String>> AcceptorList = new ArrayList<>();
-        Scanner keyboard = new Scanner(System.in);
+        String deltaInput;
+        String[] NFADelta;
+        String[] NFAInput;
+        String NFAState;
+        String NFASymbol;
+        String DFAState;
+
+        // populate hashmap for lookup
+        symbolMap.put("a", 0);
+        symbolMap.put("b", 1);
+        symbolMap.put("lambda", 2);
+
+        // Scanner keyboard = new Scanner(System.in);
 
         // accept number deltas
         System.out.printf("Input number of deltas:\n");
         delta = keyboard.nextInt();
         keyboard.nextLine();
 
+        // create array using delta as parameter
+        // [state][symbol]
+        String[][] nfa = new String[delta][3];
+        String[][] dfa = new String[delta][3];
+
         // accept string input
+        // 17 char total for string with 2 states output
+        // 12 for single state
         for (int i = 0; i < delta; i++) {
-            System.out.printf("Input NFA to convert\nForm: '{ q0 , a } = { q1 , q2 }'\n");
+            System.out.printf("Input NFA to convert\nForm: '(q0, a) = {q0, q1}'\n");
 
             // grabs delta
-            NFAString = keyboard.nextLine().split(" , ");
+            deltaInput = keyboard.nextLine();
 
-            // splits delta
-            NFATemp = NFAString[0].split(" ");
-            NFAState = NFATemp[1];
+            // split delta to state and symbol
+            // nfa side
+            NFADelta = deltaInput.split("=");
+            NFAInput = NFADelta[0].split(",");
 
-            NFATemp2 = NFAString[1].split(" ");
-            NFASymbol = NFATemp2[0];
+            // dfa side
+            if (NFADelta[1].contains(",")) {
+                DFAState = NFADelta[1]
+                        .replace("{", "")
+                        .replace("}", "")
+                        .replace(", ", "")
+                        .trim();
+            } else {
+                DFAState = NFADelta[1]
+                        .replace("{", "")
+                        .replace("}", "")
+                        .trim();
+            }
 
-            NFATemp3 = NFAString[2].split(" ");
-            DFAOutputState = NFATemp2[4] + NFATemp3[0];
-
-            // create delta
-            List<String> deltaList = new ArrayList<>();
-            deltaList.add(NFAState);
-            deltaList.add(NFASymbol);
-            deltaList.add(DFAOutputState);
-
-            // confirm state and input
-            System.out.printf("state: %s\nInput: %s\nOutput: %s\n", NFAState, NFASymbol, DFAOutputState);
-            // System.out.printf("state: %s\nInput: %s\nOutput: %s\n", NFA.getState(),
-            // NFA.getInput(), NFA.getOutput());
-
-            // put into arraylist
-            AcceptorList.add(deltaList);
+            // store state, symbol, destination
+            NFAState = NFAInput[0].replace("(", "").trim();
+            NFASymbol = NFAInput[1].replace(")", "").trim();
+            int row = Integer.parseInt(NFAState.substring(1));
+            int col = symbolMap.get(NFASymbol);
+            nfa[row][col] = NFADelta[1].trim();
+            dfa[row][col] = DFAState;
         }
 
-        keyboard.close();
+        // trash state for dfa
+        for (int i = 0; i < delta; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (dfa[i][j] == null) {
+                    dfa[i][j] = "trash";
+                }
+            }
+        }
+
+        // close keyboard
+        // keyboard.close();
+
+        return dfa;
     }
 }
