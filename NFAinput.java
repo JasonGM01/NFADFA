@@ -2,7 +2,7 @@ import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
-//Will make comments soon
+//Will make  more comments soon
 public class NFAinput
 {
 	private String[][] transitions;
@@ -10,21 +10,24 @@ public class NFAinput
 	private String[] alphabet;
 	private String initialState;
 	private Set<String> finalStates;
-
+//Field setup for a typical DFA input
 
 	public NFAinput(String[]states, String []alphabet, String initialState,Set<String> finalStates)
 	{
+		//Constructor takes in the state and input of the DFA and sets it equal to our current fields
 		this.states = states;
 		this.alphabet = alphabet;
 		this.initialState = initialState;
 		this.finalStates = finalStates;
 		transitions = new String [states.length][alphabet.length + 1];
 
+		// A new object string called transitions set equal to the row and column
+
 		for(int i = 0; i < states.length; i++)
 		{
 			for (int j = 0; j < transitions[i].length; j++)
 			{
-				transitions[i][j] = "";
+				transitions[i][j] = ""; // Transitions is set empty for the matrix
 			}
 		}
 	}
@@ -33,6 +36,7 @@ public class NFAinput
 	{
 		int row = -1;
 		int column = -1;
+		//Set for failure if it equals -1
 	
 		for(int i = 0; i < states.length; i++)
 		{
@@ -43,10 +47,13 @@ public class NFAinput
 			}
 		}
 
+		//Compareds the current value of states too the recieved value of state
+		//Then sets i equal too row and stops the loop
+
 		if(symbol.equals("<lambda>"))
 		{
 			column = alphabet.length;
-		}
+		}//Lambda will be used for the empty set
 		else
 		{
 			for(int j = 0; j < alphabet.length; j++)
@@ -58,7 +65,8 @@ public class NFAinput
 					}		
 
 			}
-		}	
+		}
+		
 	
 			if(row ==-1 || column == -1)
 			{
@@ -84,6 +92,8 @@ public class NFAinput
 			}
 
 		}
+		//Similar too above compares the current alphabet value to that of symbol
+		//Sets column equal too that current value then stops
 		
 
 		if(column ==-1)
