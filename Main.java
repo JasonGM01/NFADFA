@@ -1,8 +1,9 @@
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
-
+import java.io.PrintWriter;
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         HashMap<String, Integer> symbolMap = new HashMap<>();
         symbolMap.put("a", 0);
         symbolMap.put("b", 1);
@@ -16,22 +17,23 @@ public class Main {
         int rowLength = dfa.length; 
         int colLength = dfa[0].length;
 
-        System.out.printf("\nNew DFA transition matrix:\n");
-        String[] symbols = {"a", "b", "lambda"};
-        System.out.printf("%10s", "State");
-        for (String symbol : symbols) {
-            System.out.printf("%10s", symbol);
-        }
-        System.out.println();
-
-        for (int i = 0; i < rowLength; i++) {
-            System.out.printf("%10s", "q" + i);
-            for (int j = 0; j < colLength; j++) {
-                System.out.printf("%10s", dfa[i][j]);
+        try(PrintWriter output = new PrintWriter("dfa-output.txt")){
+            output.printf("\nNew DFA transition matrix:\n");
+            String[] symbols = {"a", "b", "lambda"};
+            output.printf("%10s", "State");
+            for (String symbol : symbols) {
+                output.printf("%10s", symbol);
             }
-            System.out.println();
-        }
+            output.println();
 
+            for (int i = 0; i < rowLength; i++) {
+                output.printf("%10s", "q" + i);
+                for (int j = 0; j < colLength; j++) {
+                    output.printf("%10s", dfa[i][j]);
+                }
+                output.println();
+            }
+        }
 
         System.out.printf("\nEnter delta to look at:\nForm: (q0, a)\n");
         String delta = keyboard.nextLine();
