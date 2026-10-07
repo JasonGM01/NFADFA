@@ -1,0 +1,6 @@
+
+New DFA transition matrix:
+     State         a         b    lambda
+        q0      q0q1     trash     trash
+        q1     trash      q1q2     trash
+        q2        q2     trash     trash
