@@ -4,7 +4,6 @@ public class Main {
     public static void main(String[] args) {
         String yesNo = "yes";
         Scanner keyboard = new Scanner(System.in);
-        System.out.println("DFA\n");
         NFADFA converter = new NFADFA();
         DFAinput dfa = converter.NFAtoDFA(keyboard);
         String[] states = dfa.getStates();
@@ -12,7 +11,7 @@ public class Main {
         String[][] transitions = dfa.getTransitions();
         
         // print dfa
-        System.out.println("DFA Transition Table:");
+        System.out.printf("\nDFA Transition Table:\n");
 
         // Print header
         System.out.printf("%-15s", "State");
@@ -32,15 +31,15 @@ public class Main {
         }
 
         // Print initial/final states
-        System.out.printf("Initial State: %s",dfa.getInitialState());
-        System.out.printf("Final States: %s",dfa.getFinalStates());
+        System.out.printf("Initial State: %s\n",dfa.getInitialState());
+        System.out.printf("Final States: %s\n",dfa.getFinalStates());
 
         //lookup transitions
         System.out.printf("Would you like to see a transition? (y/n)\n");
         yesNo = (keyboard.nextLine().equals("y")) ? "yes" : "no";
 
         while (yesNo.equalsIgnoreCase("yes")) {
-            System.out.println("\nEnter delta to look at:\nForm: (q0q1, a)");
+            System.out.printf("\nEnter delta to look at:\nForm: (q0q1, a)");
             String delta = keyboard.nextLine();
             String[] temp = delta.split(",");
 
@@ -52,8 +51,8 @@ public class Main {
                 System.out.printf("(%s, %s) -> %s\n", state, symbol, result);
             }
 
-            System.out.printf("Check another delta?\n(Yes/No)");
-            yesNo = keyboard.nextLine();
+            System.out.printf("Check another delta? (Yes/No)\n");
+            yesNo = (keyboard.nextLine().equals("y")) ? "yes" : "no";
         }
         keyboard.close();
     }
