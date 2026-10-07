@@ -10,7 +10,6 @@ public class Main {
         symbolMap.put("lambda", 2);
         
         String yesNo = "yes";
-
         Scanner keyboard = new Scanner(System.in);
         System.out.printf("\nDFA\n");
         String[][] dfa = NFADFA.NFA(keyboard);
@@ -49,6 +48,30 @@ public class Main {
         }
         
 
+        // Print initial/final states
+        System.out.printf("Initial State: %s\n",dfa.getInitialState());
+        System.out.printf("Final States: %s\n",dfa.getFinalStates());
+
+        //lookup transitions
+        System.out.printf("Would you like to see a transition? (y/n)\n");
+        yesNo = (keyboard.nextLine().equals("y")) ? "yes" : "no";
+
+        while (yesNo.equalsIgnoreCase("yes")) {
+            System.out.printf("\nEnter delta to look at:\nForm: (q0q1, a)");
+            String delta = keyboard.nextLine();
+            String[] temp = delta.split(",");
+
+            String state = temp[0].replace("(", "").trim();
+            String symbol = temp[1].replace(")", "").trim();
+            String result = dfa.getTransition(state, symbol);
+
+            if (result != null) {
+                System.out.printf("(%s, %s) -> %s\n", state, symbol, result);
+            }
+
+            System.out.printf("Check another delta? (Yes/No)\n");
+            yesNo = (keyboard.nextLine().equals("y")) ? "yes" : "no";
+        }
         keyboard.close();
     }
 }
