@@ -63,178 +63,82 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class NFADFA {
-   public DFAinput NFAtoDFA(Scanner keyboard) {
-      int delta;
-      String initialState;
-      Set<String> finalStates = new HashSet<>();
-      Set<String> discoveredStates = new HashSet<>();
-      Set<String> discoveredAlphabet = new HashSet<>();
-      ArrayList<String> parsedSources = new ArrayList<>();
-      ArrayList<String> parsedSymbols = new ArrayList<>();
-      ArrayList<Set<String>> parsedTargets = new ArrayList<>();
+    public static String[][] NFA(Scanner keyboard) {
+        HashMap<String, Integer> symbolMap = new HashMap<>();
+        int delta;
+        String deltaInput;
+        String[] NFADelta;
+        String[] NFAInput;
+        String NFAState;
+        String NFASymbol;
+        String DFAState;
 
-      //input delta
-      System.out.println("Enter number of transitions:");
-      delta = keyboard.nextInt();
-      keyboard.nextLine();
+        // populate hashmap for lookup
+        symbolMap.put("a", 0);
+        symbolMap.put("b", 1);
+        symbolMap.put("lambda", 2);
 
-      System.out.println("Enter initial state:");
-      initialState = keyboard.nextLine().trim();
-      System.out.println("Enter final state(s), separated by commas:");
-      String[] finals = keyboard.nextLine().split(",");
+        // Scanner keyboard = new Scanner(System.in);
 
-      for (String state : finals) {
-         finalStates.add(state.trim());
-      }
-      discoveredStates.add(initialState);
-      discoveredStates.addAll(finalStates);
+        // accept number deltas
+        System.out.printf("Input number of deltas:\n");
+        delta = keyboard.nextInt();
+        keyboard.nextLine();
 
-      //read nfa inputs
-      for (int i = 0; i < delta; i++) {
-         System.out.println("Enter transition:");
-         System.out.println("Form: (q0, a) = {q0, q1}");
-         String transition = keyboard.nextLine();
+        // create array using delta as parameter
+        // [state][symbol]
+        String[][] nfa = new String[delta][3];
+        String[][] dfa = new String[delta][3];
 
-         String[] tempTransition = transition.split("=");
-         String left = tempTransition[0].trim();
-         String right = tempTransition[1].trim();
+        // accept string input
+        // 17 char total for string with 2 states output
+        // 12 for single state
+        for (int i = 0; i < delta; i++) {
+            System.out.printf("Input NFA to convert\nForm: '(q0, a) = {q0, q1}'\n");
 
-         // Allow either:
-         // (q0, a)
-         // delta(q0, a)
-         left = left.replace("delta", "").replace("(", "").replace(")", "").trim();
+            // grabs delta
+            deltaInput = keyboard.nextLine();
 
-         String[] leftParts = left.split(",");
-         String sourceState = leftParts[0].trim();
-         String sourceSymbol = leftParts[1].trim();
+            // split delta to state and symbol
+            // nfa side
+            NFADelta = deltaInput.split("=");
+            NFAInput = NFADelta[0].split(",");
 
-         right = right.replace("{", "").replace("}", "").trim();
-
-         String[] targets = right.split(",");
-         Set<String> targetSet = new HashSet<>();
-
-         for (String target : targets) {
-            target = target.trim();
-
-            if (!target.isEmpty()) {
-               targetSet.add(target);
-            }
-         }
-         discoveredStates.add(sourceState);
-         discoveredStates.addAll(targetSet);
-
-         // lambda is not part of DFA alphabet
-         if (!sourceSymbol.equals("lambda") && !sourceSymbol.equals("<lambda>")) {
-            discoveredAlphabet.add(sourceSymbol);
-         }
-         parsedSources.add(sourceState);
-         parsedSymbols.add(sourceSymbol);
-         parsedTargets.add(targetSet);
-      }
-
-      //build nfa
-      String[] states = discoveredStates.toArray(new String[0]);
-      String[] alphabet = discoveredAlphabet.toArray(new String[0]);
-      NFAinput nfa = new NFAinput(states, alphabet, initialState, finalStates);
-
-      for (int i = 0; i < parsedSources.size(); i++) {
-         String symbol = parsedSymbols.get(i);
-
-         if (symbol.equals("lambda")) {
-            symbol = "<lambda>";
-         }
-         nfa.addTransition(parsedSources.get(i), symbol, parsedTargets.get(i));
-      }
-
-      //subset construction
-      ArrayList<Set<String>> dfaStates = new ArrayList<>();
-      ArrayList<Set<String>> unprocessed = new ArrayList<>();
-      ArrayList<String> dfaSources = new ArrayList<>();
-      ArrayList<String> dfaSymbols = new ArrayList<>();
-      ArrayList<String> dfaTargets = new ArrayList<>();
-      Set<String> startSet = new HashSet<>();
-
-      startSet.add(initialState);
-      startSet = nfa.lambdaClosure(startSet);
-      dfaStates.add(startSet);
-      unprocessed.add(startSet);
-      boolean trashUsed = false;
-
-      while (!unprocessed.isEmpty()) {
-         Set<String> current = unprocessed.remove(0);
-         String currentName = stateSetToName(current);
-
-         for (String symbol : alphabet) {
-            Set<String> destination = nfa.move(current, symbol);
-            destination = nfa.lambdaClosure(destination);
-            String destinationName;
-
-            if (destination.isEmpty()) {
-               destinationName = "trash";
-               trashUsed = true;
+            // dfa side
+            if (NFADelta[1].contains(",")) {
+                DFAState = NFADelta[1]
+                        .replace("{", "")
+                        .replace("}", "")
+                        .replace(", ", "")
+                        .trim();
             } else {
-               destinationName = stateSetToName(destination);
-
-               if (!dfaStates.contains(destination)) {
-                  Set<String> newState = new HashSet<>(destination);
-                  dfaStates.add(newState);
-                  unprocessed.add(newState);
-               }
+                DFAState = NFADelta[1]
+                        .replace("{", "")
+                        .replace("}", "")
+                        .trim();
             }
-            dfaSources.add(currentName);
-            dfaSymbols.add(symbol);
-            dfaTargets.add(destinationName);
-         }
-      }
 
-      //create dfa state names
-      ArrayList<String> dfaStateNames = new ArrayList<>();
+            // store state, symbol, destination
+            NFAState = NFAInput[0].replace("(", "").trim();
+            NFASymbol = NFAInput[1].replace(")", "").trim();
+            int row = Integer.parseInt(NFAState.substring(1));
+            int col = symbolMap.get(NFASymbol);
+            nfa[row][col] = NFADelta[1].trim();
+            dfa[row][col] = DFAState;
+        }
 
-      for (Set<String> state : dfaStates) {
-         dfaStateNames.add(stateSetToName(state));
-      }
+        // trash state for dfa
+        for (int i = 0; i < delta; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (dfa[i][j] == null) {
+                    dfa[i][j] = "trash";
+                }
+            }
+        }
 
-      if (trashUsed) {
-         dfaStateNames.add("trash");
-      }
-      String[] dfaStateArray = dfaStateNames.toArray(new String[0]);
+        // close keyboard
+        // keyboard.close();
 
-      //determine dfa final states
-      Set<String> dfaFinalStates = new HashSet<>();
-
-      for (Set<String> state : dfaStates) {
-         if (nfa.containsFinal(state)) {
-            dfaFinalStates.add(stateSetToName(state));
-         }
-      }
-      String dfaInitialState = stateSetToName(startSet);
-
-      //build dfa
-      DFAinput dfa = new DFAinput(dfaStateArray, alphabet, dfaInitialState, dfaFinalStates);
-
-      for (int i = 0; i < dfaSources.size(); i++) {
-         dfa.addTransition(dfaSources.get(i), dfaSymbols.get(i), dfaTargets.get(i));
-      }
-
-      // Trash state loops to itself
-      if (trashUsed) {
-         for (String symbol : alphabet) {
-            dfa.addTransition("trash", symbol, "trash");
-         }
-      }
-      return dfa;
-   }
-
-   // Convert:
-   // {q0, q1} -> q0q1
-   private String stateSetToName(Set<String> stateSet) {
-      ArrayList<String> sorted = new ArrayList<>(stateSet);
-      Collections.sort(sorted);
-      String result = "";
-
-      for (String state : sorted) {
-         result += state;
-      }
-      return result;
-   }
+        return dfa;
+    }
 }
