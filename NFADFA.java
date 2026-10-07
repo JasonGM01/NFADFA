@@ -58,48 +58,73 @@ with initial q0 and final q1
 
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Set;
 
 public class NFADFA {
-    public static String[][] NFA(Scanner keyboard) {
-        HashMap<String, Integer> symbolMap = new HashMap<>();
+   public static Accepter<Set<String>> NFA(Scanner keyboard) {
         int delta;
         String deltaInput;
         String[] NFADelta;
-        String[] NFAInput;
-        String NFAState;
-        String NFASymbol;
-        String DFAState;
+        String[] transition;
+        String state;
+        String symbol;
+        String[] destination;
+        String initialState;
+        String finalState;
+        String[] finalStates;
+        String yesNo = "y";
+        Accepter<Set<String>> nfa;
+        Accepter<Set<String>> dfa;
+        Set<String> states;
+        Set<String> symbols;
 
-        // populate hashmap for lookup
-        symbolMap.put("a", 0);
-        symbolMap.put("b", 1);
-        symbolMap.put("lambda", 2);
-
-        // Scanner keyboard = new Scanner(System.in);
-
-        // accept number deltas
-        System.out.printf("Input number of deltas:\n");
+        // accept number deltas, inital, and final(s)
+        System.out.printf("Enter number of deltas:\n");
         delta = keyboard.nextInt();
-        keyboard.nextLine();
 
-        // create array using delta as parameter
-        // [state][symbol]
-        String[][] nfa = new String[delta][3];
-        String[][] dfa = new String[delta][3];
+        //new final states array
+        finalStates = new String[delta];
+
+        System.out.printf("Enter initial state:\nForm: '{q0}'\n");
+        initialState = keyboard.nextLine();
+        
+        while(yesNo.equals("y")){
+         int i = 0;   
+         System.out.printf("Enter final state(s):\nForm: '{q0}' or '{q0, q1}'");
+            finalState = keyboard.nextLine();
+            finalStates[i] += finalState;
+            i++;
+            System.out.printf("more?(y/n)");
+            yesNo = keyboard.nextLine();
+            if(!yesNo.equals("y")) break;
+        }
+        //buffer to next line
+        keyboard.nextLine();
 
         // accept string input
         // 17 char total for string with 2 states output
-        // 12 for single state
+        // 13 for single state
         for (int i = 0; i < delta; i++) {
             System.out.printf("Input NFA to convert\nForm: '(q0, a) = {q0, q1}'\n");
 
             // grabs delta
             deltaInput = keyboard.nextLine();
+            
+            //in the event that input includes delta
+            if(deltaInput.contains("delta")) {String[] temp = deltaInput.split("("); deltaInput = temp[1];}
 
             // split delta to state and symbol
             // nfa side
+            // left is (state, symbol)
+            // right is {states}
             NFADelta = deltaInput.split("=");
-            NFAInput = NFADelta[0].split(",");
+            transition = NFADelta[0].split(",");
+            state = transition[0].trim();
+            symbol = transition[1].trim();
+            
+            //store
+            states.add(state);
+            symbols.add(symbol);
 
             // dfa side
             if (NFADelta[1].contains(",")) {
@@ -120,21 +145,18 @@ public class NFADFA {
             NFASymbol = NFAInput[1].replace(")", "").trim();
             int row = Integer.parseInt(NFAState.substring(1));
             int col = symbolMap.get(NFASymbol);
-            nfa[row][col] = NFADelta[1].trim();
-            dfa[row][col] = DFAState;
+            // nfa[row][col] = NFADelta[1].trim();
+            // dfa[row][col] = DFAState;
         }
 
         // trash state for dfa
-        for (int i = 0; i < delta; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (dfa[i][j] == null) {
-                    dfa[i][j] = "trash";
-                }
-            }
-        }
-
-        // close keyboard
-        // keyboard.close();
+        // for (int i = 0; i < delta; i++) {
+        //     for (int j = 0; j < 2; j++) {
+        //         if (dfa[i][j] == null) {
+        //             dfa[i][j] = "trash";
+        //         }
+        //     }
+        // }
 
         return dfa;
     }

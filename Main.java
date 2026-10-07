@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,7 +13,7 @@ public class Main {
 
         Scanner keyboard = new Scanner(System.in);
         System.out.printf("\nDFA\n");
-        String[][] dfa = NFADFA.NFA(keyboard);
+        Accepter<Set<String>> dfa = NFADFA.NFA(keyboard);
 
         System.out.printf("Enter delta to look at:\nForm: (q0, a)\n");
         String delta = keyboard.nextLine();
