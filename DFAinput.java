@@ -1,4 +1,4 @@
-import java.util.Set;
+import java.util.*;
 
 public class DFAinput {
     private String[][] transitions;

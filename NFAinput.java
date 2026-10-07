@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 //Will make  more comments soon
 public class NFAinput {
@@ -13,7 +10,7 @@ public class NFAinput {
 	// Field setup for a typical DFA input
 
 	public NFAinput(String[] states, String[] alphabet, String initialState, Set<String> finalStates) {
-		// Constructor takes in the state and input of the NFA and sets it equal to our
+		// Constructor takes in the state and input of the DFA and sets it equal to our
 		// current fields
 		this.states = states;
 		this.alphabet = alphabet;
