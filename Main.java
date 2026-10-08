@@ -1,7 +1,8 @@
+import java.io.*;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         String yesNo = "yes";
         Scanner keyboard = new Scanner(System.in);
         NFADFA converter = new NFADFA();
@@ -55,5 +56,7 @@ public class Main {
             yesNo = (keyboard.nextLine().equals("y")) ? "yes" : "no";
         }
         keyboard.close();
+
+        Output.outputWrite(states, alphabet, transitions, dfa.getInitialState(), dfa.getFinalStates());
     }
 }
