@@ -77,7 +77,7 @@ public class NFADFA {
 
       System.out.printf("Enter number of transitions:\n");
       delta = keyboard.nextInt();
-      keyboard.nextLine(); // clear newline
+      keyboard.nextLine();
 
       System.out.printf("Enter initial state:\n");
       initialState = keyboard.nextLine().trim();

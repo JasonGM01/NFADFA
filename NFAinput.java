@@ -165,4 +165,8 @@ public class NFAinput {
 		return finalStates;
 	}
 
+	public String[][] getTransitions(){
+		return transitions;
+	}
+
 }

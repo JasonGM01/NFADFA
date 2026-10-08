@@ -33,7 +33,7 @@ public class Main {
 
         // Print initial/final states
         System.out.printf("Initial State: %s\n",dfa.getInitialState());
-        System.out.printf("Final States: %s\n",dfa.getFinalStates());
+        System.out.printf("Final States reached: %s\n",dfa.getFinalStates());
 
         //lookup transitions
         System.out.printf("Would you like to see a transition? (y/n)\n");

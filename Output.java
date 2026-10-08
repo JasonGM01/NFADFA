@@ -28,7 +28,7 @@ public class Output {
 
             // Print initial/final states
             output.printf("Initial State: %s\n", initialState);
-            output.printf("Final States: %s\n", finalStates);
+            output.printf("Final States reached: %s\n", finalStates);
 
             output.close();
         }
