@@ -2,5 +2,5 @@
 
 set -eu
 
-javac Main.java NFADFA.java
+javac *.java
 java Main < test-input.txt
