@@ -1,6 +1,9 @@
-
-New DFA transition matrix:
-     State         a         b    lambda
-        q0      q0q1     trash     trash
-        q1     trash      q1q2     trash
-        q2        q2     trash     trash
+DFA Transition Table:
+State          a              b              
+q0             q0q1           trash          
+q0q1           q0q1           q1q2           
+q1q2           q2             q1q2           
+q2             q2             trash          
+trash          trash          trash          
+Initial State: q0
+Final States reached: [q1q2, q0q1]

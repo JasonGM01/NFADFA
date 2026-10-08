@@ -1,14 +1,8 @@
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Scanner;
-import java.io.PrintWriter;
+import java.io.*;
+import java.util.*;
+
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        HashMap<String, Integer> symbolMap = new HashMap<>();
-        symbolMap.put("a", 0);
-        symbolMap.put("b", 1);
-        symbolMap.put("lambda", 2);
-        
         String yesNo = "yes";
         Scanner keyboard = new Scanner(System.in);
         System.out.printf("\nDFA\n");
@@ -50,7 +44,7 @@ public class Main {
 
         // Print initial/final states
         System.out.printf("Initial State: %s\n",dfa.getInitialState());
-        System.out.printf("Final States: %s\n",dfa.getFinalStates());
+        System.out.printf("Final States reached: %s\n",dfa.getFinalStates());
 
         //lookup transitions
         System.out.printf("Would you like to see a transition? (y/n)\n");
@@ -73,5 +67,7 @@ public class Main {
             yesNo = (keyboard.nextLine().equals("y")) ? "yes" : "no";
         }
         keyboard.close();
+
+        Output.outputWrite(states, alphabet, transitions, dfa.getInitialState(), dfa.getFinalStates());
     }
 }
