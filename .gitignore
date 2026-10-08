@@ -1,2 +1,3 @@
 *.class
-dfa-output.txt
+*.txt
+!test-input.txt
