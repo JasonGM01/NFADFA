@@ -1,3 +1,9 @@
+# Java compiled files
 *.class
+
+# Text output
 *.txt
 !test-input.txt
+
+# VS Code
+.vscode/
